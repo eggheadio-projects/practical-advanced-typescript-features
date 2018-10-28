@@ -1,45 +1,47 @@
-function generateId(seed: number) {
-  return seed + "5";
+interface IEmail {
+  from: string;
+  to: string[];
+  body: string;
 }
 
-type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
-type Id = ReturnType<typeof generateId>;
-
-lookupEntity(generateId(10));
-function lookupEntity(id: Id) {
-  //query DB for entity by ID
+interface ITodo {
+  isCompleted: boolean;
+  text: string;
+  linkedEmail: IEmail;
 }
 
-//////////////
+interface IRootState {
+  userId: string;
+  showCompletedOnly: boolean;
+  todoTypes: string[];
+  todos: ITodo[];
+  iconGrid: string[][];
+}
 
-type UnpackPromise<T> = T extends Promise<infer K>[] ? K : any;
-const arr = [Promise.resolve(true)];
+type DeepReadonlyObject<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };
 
-type ExpectedBoolean = UnpackPromise<typeof arr>;
+type DeepReadonly<T> = T extends (infer E)[][] ?
+    ReadonlyArray<ReadonlyArray<DeepReadonlyObject<E>>> :
+  T extends (infer E)[] ? ReadonlyArray<DeepReadonlyObject<E>> :
+  T extends object ? DeepReadonlyObject<T> :
+  T;
 
+type IReadonlyRootState = DeepReadonly<IRootState>;
 
+function rootReducer(action: any, state: IReadonlyRootState): IReadonlyRootState {
+  // case action 1...
+  // case action 2...
+  return state;
+}
 
+let state: IReadonlyRootState;
 
+state.showCompletedOnly = true;
+state.userId = "newId";
+state.todoTypes = [];
+state.todoTypes[0] = "diff type";
+state.todos[1].linkedEmail.body = "hi";
+state.todos[1].linkedEmail.to[1] = "john@gmail.com";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export default {};
-
-
+state.todoTypes.map(todo => todo.toUpperCase());
+state.iconGrid[0].map(icon => icon);
