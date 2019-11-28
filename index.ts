@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+// doesn't work with es6 module import
 
 interface ITodo {
   userId: number;
